@@ -46,7 +46,7 @@
     "experimentalSpecifierResolution": "node"
   },
   "dependencies": {
-    "@churchapps/apihelper": "0.5.2",
+    "@churchapps/apihelper": "github:stephen-dahl/ApiHelper#railway",
     "@codegenie/serverless-express": "^4.16.0",
     "axios": "^1.10.0",
     "cors": "^2.8.5",

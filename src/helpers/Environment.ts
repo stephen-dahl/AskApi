@@ -24,13 +24,18 @@ export class Environment extends EnvironmentBase {
     const relativePath = "../../config/" + file;
     const physicalPath = path.resolve(__dirname, relativePath);
 
-    const json = fs.readFileSync(physicalPath, "utf8");
-    const data = JSON.parse(json);
+    let data: Record<string, any> = {};
+    try {
+      const json = fs.readFileSync(physicalPath, "utf8");
+      data = JSON.parse(json);
+    } catch {
+      console.log("Config file not found, using environment variables");
+    }
     await this.populateBase(data, "askApi", environment);
 
-    this.membershipApi = data.membershipApi;
-    this.messagingApi = data.messagingApi;
-    this.aiProvider = data.aiProvider || "openrouter";
+    this.membershipApi = process.env.API_MEMBERSHIP || data.membershipApi;
+    this.messagingApi = process.env.API_MESSAGING || data.messagingApi;
+    this.aiProvider = process.env.AI_PROVIDER || data.aiProvider || "openrouter";
     this.openAiApiKey = process.env.OPENAI_API_KEY || (await AwsHelper.readParameter(`/${environment}/openAIKey`));
     this.openRouterApiKey =
       process.env.OPENROUTER_API_KEY || (await AwsHelper.readParameter(`/${environment}/openRouterApiKey`));
